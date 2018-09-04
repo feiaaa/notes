@@ -9,7 +9,7 @@
 - 本书只讨论css2，css3在另一本书里面
 - 鉴于作者为了便于大众理解，打了很多比喻。本笔记为按照章节记录的脱水版。
 - 保留了对应术语的外文单词，如有需要自行搜索。
-- 要搜面试题，请 ```ctrl+f```搜索【面试题】，【问答】等
+- 要搜索，请 ```ctrl+f```搜索【面试题】，【问答】等
 
 ### 第一章节：流
 **css和svg的差异** ：svg在图像上有优势，但在文字上没有。
@@ -126,8 +126,8 @@ display:inline-table
 
 
 ### 鑫三无准则：无宽度，无图片，无浮动。
-- 无宽度：外部尺寸的块级元素一旦设置了宽度，流动性就丢失了。（如果内容改变，导致内部尺寸变化，外部依然定死，看上去样式出错，且不灵活）
-- 无图片：
+- 无宽度：外部尺寸的块级元素一旦设置了宽度，流动性就丢失了。（如果内容改变，导致内部尺寸变化，外部依然定死，非常难看）[博客地址]( http://www.zhangxinxu.com/wordpress/?p=1152)
+- 无图片：尽量减少图片使用。加载快，可用css3做出效果替代[博客地址]( http://www.zhangxinxu.com/wordpress/?p=1652)
 - 无浮动：
 
 > **内部尺寸和流体特性。**
@@ -212,7 +212,7 @@ max-width：防止图片过大，在移动端影响体验。如果原始图片�
 
 ### 3.4 内联元素
 **特征：可以和文字一行显示。**
-内联盒模型：分类如下
+#####  内联盒模型的分类如下
 - **内容区域（content area）**：本质是一个字符盒子（character box）。对于非文字类的替换元素，内容区域为元素本身。
 - **内联盒子（inline box）**：让内容排成一行。其实这里的内联盒子是指元素的外在盒子。，用来决定元素是内联还是块级。子类有内联盒子和匿名内联盒子。
 【eg】
@@ -241,4 +241,182 @@ max-width：防止图片过大，在移动端影响体验。如果原始图片�
 存在于每个行框盒子前面，同时具有该元素的字体和行高属性，宽度为0的内联盒。
 
 ### 第四章：盒尺寸四大家族
-涉及内容：盒模型
+**涉及内容**：盒(一般默认为块元素)的四个属性。
+
+#### 4.1 content
+【tips】此处的content，是指```.div{content:''}```，不是```<div>content</div>```
+
+#####  元素的分类方式
+- **按块级/内联分**，分成内联元素和块级元素；
+- **按可否替换分**，分成替换元素和非替换元素。
+
+> **替换元素的定义**：通过修改某个属性值呈现的内容，就能被替换的元素，叫替换元素。
+包含：```<img>```，```<object>```，```<video>```，```<iframe>```，```<textarea>```，```<input>```
+非替换元素：(X)HTML 的大多数元素是不可替换元素，**他们将内容直接告诉浏览器，将其显示出来**。
+比如```<p>p的内容</p>```、```<label>label的内容</label>```；
+从观点上来看，与非替换元素，**最大的区别在于src属性和content属性**。
+> 
+> 替换元素的3个特性：
+- 内容外观不受页面上css的影响， 如无法改变单选复选的样式
+- 有自己的默认尺寸， video，iframe，canvas为300px*150px，img为0，表单元素根据浏览器本身
+- 在很多css属性上有自己的一套表现规则。 替换元素的基线为元素下边缘，非替换元素是字符x的下边缘（详见第五章）
+> 
+##### 尺寸计算规则：
+- 固有尺寸：替换内容原本的尺寸（默认尺寸）。css2无法改变替换元素内容的固有尺寸（css3部分可以例如```object-fit```,```background-size```）
+```
+<canvas id="" width="" height="" style="background: blue;"></canvas>
+```
+- html尺寸: 只能通过 HTML 原生属性改变，包括```<img>```的width和height属性、```<input>```的size属性，```<textarea>```的cols和rows属性等
+```
+<canvas id="" width="400" height="300" style="background: red;"></canvas>
+```
+- css尺寸:可以通过 CSS 的width和height或者max-width/min-width和max-height/min-height设置的尺寸，对应盒尺寸中的content box。
+```
+.canvasSize{width: 500px;height: 100px;background: yellow;}
+<canvas id="" width="" height="" class="canvasSize"></canvas>
+```
+![尺寸关系]()
+
+> **在优先级上，css尺寸>html尺寸>固有尺寸。**
+
+【实例-优化】
+web开发的时候，为了提高性能，一般首屏一下的图片通过滚动的方式异步加载。然而因为是异步，所以会在加载过程中出现瀑布式下落（图片从无到有高度），影响体验。
+通过css控制，可以实现加载网络图片时，未加载完成的时候显示本地一张占位图，加载完成后显示网络图片；
+【法1】透明图片占位
+```
+<img src='transparent.jpg'/> //其中src也可以不写，因为当src缺省时不会有任何请求
+```
+【法2】visibility （第11章节）
+```
+.img{visibility:hidden}
+.img[src]{visibility:visible}
+```
+
+##### content属性的3条特质
+- 使用content生成的文本是无法选中和复制的(虽然防止了拷贝页面但也无法被seo获取)
+- 不能左右```:empty```类 [:empty](http://www.w3school.com.cn/cssref/selector_empty.asp)给空标签设定样式
+- content的动态生成值无法获取。（计数器）
+
+#####  ```:before/:after```伪元素技术的称呼和由来:
+实际项目中，content内容生成技术几乎都被用在```:before/:after```这两个元素里了.（ie8仅仅支持:，不支持::）
+> **8大用途**：
+- 辅助实现两端对齐/垂直居中/上下边缘对齐。
+【范例】[底部对齐的柱状图](http://demo.cssworld.cn/4/1-7.php)
+【注意】第一行```<div id="box" class="box"><i class="bar"></i>```不能写成
+```
+<div id="box" class="box">
+<i class="bar"></i>
+```
+- 如果写了```text-align:justify```失效，就不是左右贴着两端对齐了
+- 关于```text-align:justify```在第八章8.6.6 或者[作者博客](http://www.zhangxinxu.com/wordpress/?p=1514)
+
+```:before```用于辅助实现底部对齐 （见第五章5.3.8综合实例第4点）
+```:after```用于辅助实现两端对齐 （见第八章8.6）
+
+-项目列表中的图标（图片图标）：
+```
+div:before{
+content:url(1.jpg)
+}
+```
+也可以
+```
+div:before{
+content:'';url(1.jpg)
+}
+```
+
+- 项目列表中的图标（font-face图标）：
+[大漠的font-face教程](https://www.w3cplus.com/css3/web-icon-with-font-face)
+两种列表图标的对比：
+1图标比较少的时候/base64体积小的时候用图片图标划算。
+2要成体系，随时修改用font-face 。可以让设计用iconfont生成。
+
+
+-loading加载效果：
+操作方式：content内用转义的换行符```'\A'```,```'\D'```
+【范例】[content换行符与打点loading效果实例页面](http://demo.cssworld.cn/4/1-9.php)
+
+-引用符号quote：
+```
+q:before{content:'“'}
+q:after{content:'”'}
+```
+但实际上这个功能很鸡肋
+
+-attr属性值：
+【eg】image使用alt属性改变图片描述信息
+```
+img::after{
+content:attr(alt)
+}
+```
+【eg】自定义一个叫做data-title的属性
+```
+img::after{
+content:attr(data-title)
+}
+```
+>【eg】关于自定义属性的错误示范（不能有引号）
+```
+img::after{
+content:attr('data-title')
+}
+```
+
+-【重点】计数器。
+【范例】[CSS计数器counter-reset值为2实例页面](http://demo.cssworld.cn/4/1-11.php)
+
+ [ countent计数器](https://blog.csdn.net/qq_22182279/article/details/80251555)
+【知识点】
+两个属性（``` counter-reset```,```  counter-increment```）和一个方法（``` counter()```/```   counters()```）
+
+-counter-reset:设置某个选择器出现次数的计数器的值，默认值是0，chrome下可以取小数，任何小数向下取整(把小数点后面的截掉)；多个以空格分隔，而不是逗号
+-counter-increment：计数器递增的值，默认为1。
+使用content:counter(...)会默认先执行一次```counter-increment```+```counter-reset```，所以content默认情况下显示的就是1。
+也可以递减，```counter-increment:counter-1```
+-  counter():显示计数,支持级联
+-counters():显示计数，用于嵌套计数。（例如文章的章节列表）
+
+【计数器的重点】【普照规则】计数的计算方式
+普照规则：一个容器里的普照源```counter-reset```唯一，每普照```counter-increment```一次，普照源增加一次计数值。（不用在意关系，只用在意被普照了几次）
+【eg】[CSS计数器counter-increment递增机制演示实例页面](http://demo.cssworld.cn/4/1-15.php)
+【说明】：
+before和after的content各显示一个计数器，所以展示出来有2个。
+before这边有一个递增。基于初始值，2+1=3;
+after这边再来个递增，基于3,3+1=4；
+
+如果序号出错，考虑一下，是不是把计数显示和计数重置以兄弟的关系放一起了。
+【范例】
+[正确的范例](http://demo.cssworld.cn/4/1-18.php)
+[错误的范例](http://demo.cssworld.cn/4/1-19.php)
+可以拿对比工具对一下，发现出错的原因，是把嵌套关系写成了兄弟关系，所以出错。
+
+-混合特性
+content各种语法可以混在一起写。
+```
+q:before{
+content :url(xxx.png) open-quote;
+}
+```
+【用途】在伪元素中同时显示文字和图片
+
+#### 4.2 padding
+padding在垂直方向上，同样会影响布局。虽然垂直方向上面的行为完全是```line-height```和```vertical-align```的影响。
+用途：
+- [增大点击区域]http://demo.cssworld.cn/4/2-1.php)
+- [管道符与超链接平齐]http://demo.cssworld.cn/4/2-1.php) 
+代码中的```a+a:before```看这里 [CSS 相邻兄弟选择器](http://www.w3school.com.cn/css/css_selector_adjacent_sibling.asp)
+
+
+##### padding的横向纵向百分比，按照宽度来作为标准。
+用途：根据比例做出等比的矩形和正方形。
+【应用】[首屏头图适配](http://demo.cssworld.cn/4/2-3.php)
+
+与内联元素上的差异:断行，宽高细节差异。原因：内联元素的垂直padding会让支柱（strut）出现。
+
+#####  其他细节：
+- 有序列表和无序列表的padding-left单位是px。
+- 很多表单元素（input textarea button）都内置padding；所有浏览器的单选和复选框无内置padding；button的padding最难控制
+- 在图像上面的用途，可以绘制打开菜单的三道杠和双层圆点。
+[代码](http://demo.cssworld.cn/4/2-4.php)
