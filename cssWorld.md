@@ -275,7 +275,7 @@ max-width：防止图片过大，在移动端影响体验。如果原始图片�
 .canvasSize{width: 500px;height: 100px;background: yellow;}
 <canvas id="" width="" height="" class="canvasSize"></canvas>
 ```
-![尺寸关系]()
+![尺寸关系](https://github.com/feiaaa/notes/blob/master/peitu/tihuanSize.png)
 
 > **在优先级上，css尺寸>html尺寸>固有尺寸。**
 
@@ -299,7 +299,8 @@ web开发的时候，为了提高性能，一般首屏一下的图片通过滚�
 
 #####  ```:before/:after```伪元素技术的称呼和由来:
 实际项目中，content内容生成技术几乎都被用在```:before/:after```这两个元素里了.（ie8仅仅支持:，不支持::）
-> **8大用途**：
+
+#####  **8大用途**：
 - 辅助实现两端对齐/垂直居中/上下边缘对齐。
 【范例】[底部对齐的柱状图](http://demo.cssworld.cn/4/1-7.php)
 【注意】第一行```<div id="box" class="box"><i class="bar"></i>```不能写成
@@ -307,44 +308,47 @@ web开发的时候，为了提高性能，一般首屏一下的图片通过滚�
 <div id="box" class="box">
 <i class="bar"></i>
 ```
-- 如果写了```text-align:justify```失效，就不是左右贴着两端对齐了
+
+- 如果写了,```text-align:justify```失效，就不是左右贴着两端对齐了
 - 关于```text-align:justify```在第八章8.6.6 或者[作者博客](http://www.zhangxinxu.com/wordpress/?p=1514)
 
-```:before```用于辅助实现底部对齐 （见第五章5.3.8综合实例第4点）
-```:after```用于辅助实现两端对齐 （见第八章8.6）
+> ```:before```用于辅助实现底部对齐 （见第五章5.3.8综合实例第4点）
+> ```:after```用于辅助实现两端对齐 （见第八章8.6）
 
--项目列表中的图标（图片图标）：
+- 项目列表的图标（图片图标）
+
 ```
 div:before{
-content:url(1.jpg)
+content:url(xxx.jpg)
 }
 ```
 也可以
 ```
 div:before{
-content:'';url(1.jpg)
+content:'';url(xxx.jpg)
 }
 ```
 
 - 项目列表中的图标（font-face图标）：
 [大漠的font-face教程](https://www.w3cplus.com/css3/web-icon-with-font-face)
 两种列表图标的对比：
-1图标比较少的时候/base64体积小的时候用图片图标划算。
-2要成体系，随时修改用font-face 。可以让设计用iconfont生成。
+ - 图标比较少的时候/base64体积小的时候用图片图标划算。
+ - 要成体系，随时修改用font-face 。可以让设计用iconfont生成。
 
 
--loading加载效果：
+- loading加载效果：
 操作方式：content内用转义的换行符```'\A'```,```'\D'```
 【范例】[content换行符与打点loading效果实例页面](http://demo.cssworld.cn/4/1-9.php)
 
--引用符号quote：
+- 引用符号quote：
+但实际上这个功能很鸡肋
 ```
 q:before{content:'“'}
 q:after{content:'”'}
 ```
-但实际上这个功能很鸡肋
 
--attr属性值：
+
+- attr属性值：
 【eg】image使用alt属性改变图片描述信息
 ```
 img::after{
@@ -357,29 +361,29 @@ img::after{
 content:attr(data-title)
 }
 ```
->【eg】关于自定义属性的错误示范（不能有引号）
+【eg】关于自定义属性的错误示范（不能有引号）
 ```
 img::after{
 content:attr('data-title')
 }
 ```
 
--【重点】计数器。
+- 【重点】**计数器**。
 【范例】[CSS计数器counter-reset值为2实例页面](http://demo.cssworld.cn/4/1-11.php)
 
  [ countent计数器](https://blog.csdn.net/qq_22182279/article/details/80251555)
 【知识点】
 两个属性（``` counter-reset```,```  counter-increment```）和一个方法（``` counter()```/```   counters()```）
 
--counter-reset:设置某个选择器出现次数的计数器的值，默认值是0，chrome下可以取小数，任何小数向下取整(把小数点后面的截掉)；多个以空格分隔，而不是逗号
--counter-increment：计数器递增的值，默认为1。
+ - counter-reset:设置某个选择器出现次数的计数器的值，默认值是0，chrome下可以取小数，任何小数向下取整(把小数点后面的截掉)；多个以空格分隔，而不是逗号
+ - counter-increment：计数器递增的值，默认为1。
 使用content:counter(...)会默认先执行一次```counter-increment```+```counter-reset```，所以content默认情况下显示的就是1。
 也可以递减，```counter-increment:counter-1```
--  counter():显示计数,支持级联
--counters():显示计数，用于嵌套计数。（例如文章的章节列表）
+ -  counter():显示计数,支持级联
+ - counters():显示计数，用于嵌套计数。（例如文章的章节列表）
 
-【计数器的重点】【普照规则】计数的计算方式
-普照规则：一个容器里的普照源```counter-reset```唯一，每普照```counter-increment```一次，普照源增加一次计数值。（不用在意关系，只用在意被普照了几次）
+【计数器的重点】**【普照规则】计数的计算方式**
+普照规则：一个容器里的普照源```counter-reset```唯一，每普照```counter-increment```一次，普照源增加一次计数值。（不用在意关系，**只用在意被普照了几次**）
 【eg】[CSS计数器counter-increment递增机制演示实例页面](http://demo.cssworld.cn/4/1-15.php)
 【说明】：
 before和after的content各显示一个计数器，所以展示出来有2个。
@@ -392,7 +396,7 @@ after这边再来个递增，基于3,3+1=4；
 [错误的范例](http://demo.cssworld.cn/4/1-19.php)
 可以拿对比工具对一下，发现出错的原因，是把嵌套关系写成了兄弟关系，所以出错。
 
--混合特性
+- 混合特性
 content各种语法可以混在一起写。
 ```
 q:before{
@@ -404,19 +408,20 @@ content :url(xxx.png) open-quote;
 #### 4.2 padding
 padding在垂直方向上，同样会影响布局。虽然垂直方向上面的行为完全是```line-height```和```vertical-align```的影响。
 用途：
-- [增大点击区域]http://demo.cssworld.cn/4/2-1.php)
-- [管道符与超链接平齐]http://demo.cssworld.cn/4/2-1.php) 
+- [增大点击区域](http://demo.cssworld.cn/4/2-1.php)
+- [管道符与超链接平齐](http://demo.cssworld.cn/4/2-1.php) 
 代码中的```a+a:before```看这里 [CSS 相邻兄弟选择器](http://www.w3school.com.cn/css/css_selector_adjacent_sibling.asp)
 
-
-##### padding的横向纵向百分比，按照宽度来作为标准。
+##### ```padding```的横向纵向百分比，按照宽度来作为标准。
 用途：根据比例做出等比的矩形和正方形。
 【应用】[首屏头图适配](http://demo.cssworld.cn/4/2-3.php)
 
 与内联元素上的差异:断行，宽高细节差异。原因：内联元素的垂直padding会让支柱（strut）出现。
 
-#####  其他细节：
-- 有序列表和无序列表的padding-left单位是px。
-- 很多表单元素（input textarea button）都内置padding；所有浏览器的单选和复选框无内置padding；button的padding最难控制
+##### 其他细节：
+- 有序列表和无序列表的``padding-left``单位是px。
+- - 很多表单元素（```input```,``` textarea```,``` button```）都内置```padding```；
+ - 所有浏览器的单选和复选框无内置padding；
+  - button的padding最难控制
 - 在图像上面的用途，可以绘制打开菜单的三道杠和双层圆点。
 [代码](http://demo.cssworld.cn/4/2-4.php)
