@@ -427,3 +427,7 @@ padding在垂直方向上，同样会影响布局。虽然垂直方向上面的�
   - button的padding最难控制
 - 在图像上面的用途，可以绘制打开菜单的三道杠和双层圆点。
 [代码](http://demo.cssworld.cn/4/2-4.php)
+
+
+### 第五章：内联元素与流
+**涉及内容**：baseline，line-height，vertical-align，支柱（strut）
