@@ -428,6 +428,265 @@ padding在垂直方向上，同样会影响布局。虽然垂直方向上面的�
 - 在图像上面的用途，可以绘制打开菜单的三道杠和双层圆点。
 [代码](http://demo.cssworld.cn/4/2-4.php)
 
+#### 4.3 margin
+##### 4.3.1【必读】定义阐述
+- 元素尺寸：对应jQuery中的```$().width/$().height()```方法，包括```padding/border```，也就是元素的```border box```的尺寸。在原生的DOM API中写成```offsetWidth/offsetHeight```，也称为元素偏移尺寸。
+- 元素内部尺寸：对应jQuery中的```$().innerWidth()/$().innerHeight()```方法，表示元素的内部尺寸，包括```padding```但不包括border，也就是元素的padding box的尺寸。在原生的DOM API中写成```clientWidth/clientHeight```，也称为元素可视尺寸。
+- 元素外部尺寸：对应jQuery中的```$().outerWidth(true)/$().outerHeight(true)```方法，表示元素的外部尺寸，包括padding/border/margin，也就是元素的```margin box```的尺寸。没有对应的原生的DOM API。
+- 【个人总结】元素尺寸-```border```;元素内部尺寸-```padding```;元素外部尺寸-```margin```
+
+##### ```margin```与元素的内部尺寸（```padding```）
+>【复习】3.2.1```width:auto```的4种宽度表现。
+ - 充分利用可用空间（例如一些div元素的默认宽度是100%），
+ - 收缩到合适（shrink to fit），包裹性（由内容撑开）
+ - 收缩到最小
+ - 超出容器限制
+
+> 内部尺寸和流体特性。特性：
+- 包裹性：包裹性=包裹+自适应性（即元素尺寸由内部元素决定，但永远小于包含块的容器的尺寸）
+-  首选最小宽度
+- 最大宽度
+
+**【结论】**
+- 对于padding，元素设定width或者保持‘包裹性’的时候，会改变可视元素的尺寸；
+- 对于margin，元素设定width或者保持‘包裹性’的时候，对元素的尺寸无影响；只有元素是‘充分利用可用空间’时，才会改变可视元素的尺寸；
+
+>【面试题】负边距表现出来是怎样的。
+> 尺寸变大。此时元素是‘充分利用可用空间’。
+
+【eg】
+```
+<div class="father">    
+	<div class="son"></div>
+</div>
+
+.father { width: 300px; }.son { margin: 0 -20px; }
+```
+> 此时，.son元素的宽度是340px（300+20+20）
+
+【应用】通过负边距做出的自适应布局。
+【eg】【书上例子】左侧定宽右侧自适应
+```
+.box { overflow: hidden; }
+.box > img { float: left; }
+.box >p { margin-left: 140px; }
+<div class="box">
+    <img src="xxx.jpg">
+    <p>文字内容……</p>
+</div>
+```
+> 左侧图片定死，右侧p文字自适应，此处并未用到负边距;
+
+【eg】【书上例子】右侧定宽左侧自适应，且dom的书写无需颠倒位置。（需要颠倒的原因见第六章float）
+```
+.box { overflow: hidden; }
+.full { float: left; width: 100%; }
+.box > img { float: left; margin-left: -128px; }
+.full>p { margin-right: 140px; }
+
+<div class="box">
+    <div class="full">    
+        <p>文字内容……</p>
+    </div>
+    <img src="1.jpg">
+</div>
+
+```
+> 左侧full文字自适应，右侧图片定死。
+> 左侧full宽度占满，但P元素留下了右边margin；
+> 右侧img在float以后，靠负边距撑开，满足‘充分利用可用空间’。
+> 注意负边距要大于需要的定宽宽度，否则会掉下去。
+
+【eg】【书上例子】两端对齐效果
+【法1】flex。
+【法2】使用CSS3的nth-of-type() 选择器原理：利用父容器
+![div排列两端对齐](https://img2.mukewang.com/5786038b0001fd3612800720.jpg)
+
+##### ```margin```与元素的外部尺寸。
+对于普通的块状元素，在默认的水平流下，margin只能改变左右方向的内部尺寸，垂直方向上无法改变。
+如果我们是用writing-mode的，改变流向为垂直流，则水平方向内部尺寸无法改变，垂直方向可以改变，这是由margin:auto的计算规则决定的。
+
+【eg】【书上例子】【浏览器间差异】有滚动条的情况下，借助外部尺寸特性来实现底部留白。
+【带bug的代码 】
+```
+<div style="height: 100px;background: yellow;overflow:  scroll;padding: 50px 0;">
+           <img src="img/HBuilder.png" height="114" style=""/>
+</div>
+```
+> 此处表现为：父级高度小于图片高度，带滚动条，设定了上下50px的内边距。但是在chrome下正常，在ie和firefox下，下边距的50px没了。
+> 原因：未定义行为（见第2章术语）。chrome触发滚条的条件是子元素超过content box。ie和firefox的是子元素超过padding box。
+【修复后的代码】
+```
+<div style="height: 100px;background: yellow;overflow: scroll;">
+        <img src="img/xxx.png" height="114"  style="margin: 50px 0;"/>
+</div>
+```
+> 【注意】
+> 必须触发滚条；margin留白写在子元素内。
+
+
+【eg】【书上例子】【面试题】等高布局
+[代码](http://demo.cssworld.cn/4/3-2.php)
+关键点：
+```
+margin-bottom: -9999px;
+padding-bottom: 9999px;
+```
+
+> 【原理】
+> 垂直方向```margin```上无法改变元素的内部尺寸，但是能够改变外部尺寸。因为```margin-bottom: -9999px;```意味着元素的外部尺寸在垂直方向上变小。
+> 默认情况下，垂直方向块级元素的上下距离是0，一旦```margin-bottom: -9999px;```，就意味着后面所有的元素和上面元素的空间距离变成了-9999px，也就是后面元素都往上移动了。
+> ```padding```增加高度元素，正负抵消，对布局成无影响，却给我们需要的是视觉层多了9999的高度的可使用的背景色。
+> 因为数值太大，所以配合父级```overflow:hidden```，把多出来的色块藏掉，形成了视觉上的等高布局效果。
+
+**等高布局的其他方法和比较**
+- 【margin】：
+优点：兼容ok，支持多个分栏。缺点：触发锚点定位会有奇怪的定位问题。子元素在父元素外，使用overflow:hidden成了限制。
+- 【border】：
+优点：兼容ok，无锚点定位问题。缺点：最多三栏，不支持百分比（因为border不支持，这个在4.4讲）；只能实现至少一侧定宽布局（范例见4.4.6）
+- 【table-cell】优点：天然等高，缺点：只有IE8以上浏览器才坚持。
+
+- 【总评】如果项目无需兼容ie6,7，则推荐使用table-cell实现等高布局。
+
+#### 4.3.2 ```margin```的百分比（一个没什么应用价值的功能）
+- ```margin```在垂直方向上无法改变元素自身内容尺寸。需要父元素做载体。
+- ```margin```的百分比值无论是水平方向还是垂直方向都是相对于宽度计算的
+容易出现边距合并问题，有时要设定双倍尺寸。
+
+#### 4.3.3 margin合并
+**定义**：块级元素的上外边距和下外边距，有时候会合并成单个外边距。
+**2个条件**，块级元素，只发生在垂直方向（当前文档流方向相垂直）上。
+
+**3种场景**：相邻元素的margin合并，父级和第一个/最后一个子元素合并，空块级元素合并。
+
+> 避免合并的办法：
+> 针对第2个场景：
+- 父元素变成块级格式化上下文 (Block Fromatting Context,简称[BFC](https://www.cnblogs.com/libin-1/p/7098468.html)，见6.3章)
+- 父元素设置```border-top/padding-top```/```border-bottom/padding-bottom```
+- 父元素和第一个/最后一个子元素间添加内联元素分隔
+
+> 【eg】
+> margin合并导致头图掉下来可以添加```.container{overlfow:hidden;}```进行修复。
+> 其原理是通过设置overflow属性让父级元素块状格式化上下文。
+
+> 针对第3个场景：
+- 设置垂直方向的border/padding；
+- 设置height/min-height;
+- 里面添加内联元素（直接空格不行）
+
+【面试题】**计算规则**：正正取大值，正负相加，负负最负值
+
+**【问答】```*{margin:0;padding:0}```和边距合并**
+> 应该看场合使用。绝大多数网站可以这么干，如果是博客，文章类网站，应该统一标签的margin大小而不是重置为0。
+> 任何地方放```<div>```，都不会影响布局，但是```<div>```是没有语义的。不代表任何特定类型的内容，只用来分组，分隔。
+> - 父子合并的意义：不合并可能会导致间距很大，违背了```div```设计的作用，影响阅读体验。
+> - 自身合并的意义：可以避免不小心遗落或生成空标签，影响排版布局。
+
+#### 4.3.4  ```margin:auto```
+- 元素就算没有设置宽度或者高度，也会自动填充。
+```
+ <div></div>
+```
+> 宽度自动填满。
+
+- 元素没有设置高度或者宽度，也会自动填充对应的方位。
+```
+<div></div>
+
+div{
+position:absolute;
+left:0;
+right:0;
+}
+```
+> 宽度还是自动填满。
+
+> **填充规则**
+- 一侧定值，一侧auto，auto占满剩余空间的大小。
+- 两侧均为auto则平分剩余空间。
+
+【eg】让某个块状元素右对齐。
+【法1】float。
+【法2】margin-left：auto
+```
+<div style="width: 300px;background: yellow;">
+          <div style="width: 100px;background:  green;margin-left: auto;">
+                        111
+          </div>
+</div>
+```
+【原理】margin的初始值0，如果说缺了一边，另一边有auto，则正好是偏向缺省这边的对齐效果。
+
+【面试题】用该特性做水平垂直居中。
+【法1】top50%再margin-height/2
+【法2】绝对定位+宽高定死+```margin:auto```，缺点：ie8+支持
+[代码](http://demo.cssworld.cn/4/3-5.php)
+
+
+【复习】第三章 外部尺寸和流体特性 的第二条 ：   
+格式化宽度仅出现在绝对定位模型中。```position:absolute fixed``` 一般来说，绝对定位元素的宽度是由内部尺寸决定的。在特例（非替换元素）的情况下，宽度是由外部尺寸决定的。（宽度由最近的，position非static的祖先元素决定）
+【原理】
+在子元素只写了绝对定位时，尺寸表现为 “格式化宽度和格式化高度”，即为外部尺寸，可以自动填满父容器。
+宽高被定死以后，原来该被填满的空间空了出来，用auto平分剩余空间
+
+##### margin无效的原因
+
+- display计算值inline的非替换元素的垂直margin是无效的。
+对于内联替换元素，垂直margin有效，并没有margin合并问题。所以图片永远不会发生margin合并。
+
+- 表格中的```tr```和```td```元素，或者设置```display:table-cell,display:table-row```元素的margin是无效的。设置```display:table-caption,display:inline-table```元素的ok
+
+- margin合并的时候更改margin值是没有效果的。
+- 绝对定位元素，非定位方向的margin值无效。
+```
+img{top:30%,margin-right:10px} //margin-right写了，right没写，无效
+```
+
+- 定高容器的子元素的margin-bottom或者，宽度定死的子元素的margin-right定位失效。
+
+- 鞭长莫及，导致margin无效。（需要理解float和overflow ，第六章）
+- 内联特性导致margin无效。
+
+#### 4.4 border
+```border-width```不支持百分比的两个原因：
+- 如果内容变大，边框也按比例变大，不符合语义化；
+- 容易造成没对齐的假象
+
+**重置：**```border:0```或者```border:none```
+
+##### 冷门的border-style
+【面试题】双线边框。```border-style:double```
+
+##### border-color的跟着color走
+【eg】应用图标变色。
+[代码](http://demo.cssworld.cn/4/4-1.php)
+
+##### 透明边框的三大技巧：
+- 右下方background的定位技巧
+- 增加点击区域大小
+- 三角形绘制。
+
+**【eg】border等高布局**
+[代码](http://demo.cssworld.cn/4/4-4.php)
+【注意】
+等高布局的优劣对比见4.3.1
+最多实现2-3栏，等比例的最多7栏。父容器不能用```overflow:hidden```
+
+【个人】综合练习
 
 ### 第五章：内联元素与流
 **涉及内容**：baseline，line-height，vertical-align，支柱（strut）
+
+
+#### 5.1 术语介绍【必读】
+- **基线：baseline，**字母x的下边缘（线）就是基线。 （这个在后期会经常提到！）
+- **字母x与CSS中的x-height**：x-height指的是字母x的高度。
+- **vertical-align:middle**;的middle指的是基线网上1/2 x-height高度。
+
+- **字母x与CSS中的ex**
+> ex是CSS中的一个相对单位，指的是小写字母x的高度，即x-height。
+> **ex的作用是不受字体和字号影响的内联元素的垂直居中对齐效果。**
+> 内联元素默认是基线对齐，而基线就是x的底部，而1ex就是一个x的高度。
+
+（关系图：图片来自wiki的x-height词条，看不到请科学上网）
+![各个术语的关系](https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Typography_Line_Terms.svg/410px-Typography_Line_Terms.svg.png)
