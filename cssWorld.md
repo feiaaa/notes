@@ -924,5 +924,196 @@ line-height:150%
 - **块状格式化上下文（BFC）**；block formatting context；
 - **内联格式化上下文（IFC）**；inline formatting context；（这个略过）
 
+#####  特性和表现原则
+**表现原则 **：具有BFC特性的元素的子元素不会受到外部元素的影响，也不会影响外部元素。（里面出不去，外面进不来）
+
+根据原则而出现的情况：
+- BFC不会触发margin重叠（因为margin重叠影响外部元素）
+- 可以用来清除浮动。（子元素不清除，导致父元素高度坍塌，影响后面的布局和定位，也算影响外部元素）
+
+##### 如何触发BFC
+
+-  html根元素；
+- overflow的值为auto、scroll或hidden；
+- display的值为table-cell、table-caption和inline-block中的任何一个；
+- float的值不为none；
+- position的值不为relative和static。
+
+只要元素符合上面任意一个条件，就无须使用```clear:both;```属性去清除浮动的影响。
+
 ##### BFC与流体布局
-> 【eg】[CSS深入理解流体特性和BFC特性下多栏自适应布局]( http://www.zhangxinxu.com/wordpress/?p=4588)
+【博客】[CSS深入理解流体特性和BFC特性下多栏自适应布局]( http://www.zhangxinxu.com/wordpress/?p=4588)
+**【复习 表现原则】**具有BFC特性的元素的子元素不会受到外部元素的影响，也不会影响外部元素。
+
+>【用途】自适应布局
+ (p162 流体自适应布局和bfc自适应布局 )[https://codepen.io/feiaaa/pen/xaYabd]
+
+> 基于BFC特性的自适应布局有如下优点：
+
+1. 自适应内容由于封闭更加健壮，容错性更强。内部设置clear:both;不会与float元素相互干扰而导致错位。
+2. 自适应内容自动填充浮动以外区域，无需关心浮动元素宽度，可以整站大规模应用。
+
+> 基于BFC特性的自适应布局有如下缺点（导致有优势却没有大规模应用的原因）
+
+ 1.  ``` float:left;```。浮动元素本身BFC化，然而浮动元素具有破坏性和包裹性，失去了元素本身的流体自适应性，因此无法用来实现自动填满容器的自适应布局。
+ 2. ```position:absolute;```。脱离文档流，不容易操作。
+ 3. ```overflow:hidden;``块状元素的流体特性保存得很好，加上BFC的独立区域特性，而且从IE7开始就支持，兼容性很好。唯一的问题是容器盒子外的元素可能会被隐藏掉。
+ 4. ```display:inline-block;```让元素尺寸包裹收缩， 不是我们想要的block流动特性
+ 5. ``` display:table-cell``` 让元素表现的像单元格，ie8+支持。但会出现第三章一柱擎天的效果
+ 6. ```display:table-row ```无法自适应容器剩余空间
+ 7. ```display:table-caption```没什么用
+
+###### IE7及以上版本浏览器适配的自适应解决方案：
+
+ 1. 借助overflow属性，如下:
+```
+.lbf-content {
+overflow: hidden;
+}
+```
+2.  融合```display: table-cell;```和```display: inline-block;```，如下：
+```
+.lbf-content {
+display: table-cell;
+width: 9999px;
+}
+```
+
+ ```display: table-cell;```元素内连续英文字符无法换行的问题：
+```
+.word-break {
+display: table;
+width: 100%;
+table-layout: fixed;
+word-break: break-all;
+}
+```
+#### 6.4 最佳结界overflow
+要彻底清除浮动的影响，最适合的属性是```overflow```，和BFC组合使用清除浮动。
+ ```overflow:hidden;```声明不会影响元素原先的流体特性或宽度表现。
+ ```overflow```的原本属性是指定块容器元素的内容溢出时是否需要裁剪。结界是衍生效果。
+visible：默认值
+
+【面试题】写一下清除浮动的样式。
+
+##### 了解overflow-x和overflow-y
+IE8+浏览器，overflow增加了两个属性，overflow-x和overflow-y，分别表示单独控制水平或垂直方向上的剪裁规则。
+支持的属性值和overflow属性一模一样：
+- visible：默认值
+- hidden：剪裁
+- scroll：滚动条
+- auto
+**不会出现一个方向溢出剪裁或滚动，另一个方向内容溢出显示的效果。**
+
+可以默认出现滚条的两个标签```<html>```,```<textarea>```
+默认值都是auto。（不是visible）
+
+浏览器与滚条
+1.默认滚动条来自html，而不是body标签。
+【去掉默认滚条的方式】```html {overflow: hidden;}```，移动端用js
+2.滚条会占用容器的可用宽度或高度。
+【解决方式】移动端的滚条一般为悬浮模式，没事。
+pc端会有一个17px 的差值。
+【法1】<table>最后一列自适应，前面宽度定死。
+【法2】<table>定宽，右侧留17px
+3.（基于2）页面变宽会导致水平方向的晃动
+【解决办法】```html {overflow-y:scroll;}```
+
+【eg】采用双table做出的表头固定，表格内容可滚动的样式
+[表头固定而内容滚动的表格（滚轴在表格外）](https://blog.csdn.net/yiifaa/article/details/52104698)
+
+[表头固定而内容滚动的表格（滚轴在表格内） ](https://codepen.io/feiaaa/pen/qMxJQW)
+
+基于webkit 的自定义滚条
+
+术语说明（还有其他3个不怎么用所以略过）
+1. ```::-webkit-scrollbar   ```定义了滚动条整体的样式；
+2.  ```::-webkit-scrollbar-thumb  ```滑块部分；
+3. ```::-webkit-scrollbar-track```  轨道部分；
+
+【eg】基于webkit 的自定义滚条
+![自定义滚条](https://images2015.cnblogs.com/blog/897472/201705/897472-20170502160918836-545708149.png)
+[博客和代码](https://www.cnblogs.com/lfhy/p/6796653.html)
+
+#####【eg】单行和多行 文字溢出...效果
+[代码演示](https://codepen.io/feiaaa/pen/WgMWmw)
+【说明】
+- 单行文本的这三条样式是最精简的了，一条都不能少。（组合起来的意思是：不换行+超出剪切+文字溢出时样式点点点）
+- 多行文本的这三条,也是一条不能少。 
+但是：虽然书上说无需依赖```overflow: hidden```，但不加还是会有诡异的现象（多行的时候确实是末尾...了，但是多余部分没有隐藏）；另外，只有-webkit内核有效，其他无效（IE/Firefox）
+```
+.ell-rows-2 {
+    display: -webkit-box;//将对象作为弹性伸缩模式
+    -webkit-box-orient: vertical;//检索对象的盒子的排列方式
+    -webkit-line-clamp: 2;//显示的行数
+}
+```
+
+##### overflow与锚点定位
+###### 基于URL地址的锚链(location.hash)实现锚点跳转的方法有两种：
+1. a标签以及name属性
+2. 使用标签的id属性 
+
+ **最兼容的，简洁的跳转方式**
+（因为并不是所有的元素都有name 属性，具体点[这里](https://m.imooc.com/qadetail/132677)
+
+```
+<a href="#1">发展历程</a> //点击会跳的位置（相当于发送端）
+<p id="1"></p>//点击会被跳到的位置（相当于接受端）
+```
+
+> 锚点定位行为的触发条件
+1. URL地址中的锚链与锚点元素对应并有交互行为；
+2. 可focus的锚点元素处于focus状态。
+
+focus锚点定位指的是类似链接或按钮、输入框等可以被focus的元素在被focus时发生的页面重定位现象。
+```
+<input type="" name="inputs" id="inputs" value="" />
+<a href='javascript:'  onclick="document.querySelector('#inputs').focus();">focus点击后的路径效果 js</a>
+```
+
+> 区别
+URL地址锚点定位是让元素定位在浏览器窗体的上边缘
+而focus锚点定位`是让元素在浏览器窗体范围内显示即可。
+
+（个人）
+使用URL地址锚点定位 的缺点是url后面会带有#号，并且回退的时候有记录。
+focus锚点定位 ，还要搭配一点平滑动js之类。需要依赖js 。（focus也不是什么标签都能用）
+
+###### 锚点定位作用的本质
+锚点定位行为的发生，本质上是通过改变容器滚动高度或宽度来实现。本质是改变了scrollTop或scrollLeft的值。
+【误区和说明】
+- 锚点定位也可以发生在普通容器元素上，而且定义行为的发生时由内而外的。
+由内而外：普通元素和窗体同时滚动式，会由内而外的触发所有可滚动的窗体的锚点定位行为。
+- 设置了```overflow:hidden```的元素也是可以滚动的。
+ ```overflow:hidden```和```overflow:auto``` ```overflow:scroll```的差别就在于有没有滚条。（如果设置了hidden，并且超高，滚条不存在，滚动依然存在）
+【eg】[focus锚点定位和overflow的选项卡切换效果实例页面](https://demo.cssworld.cn/6/4-3.php)
+【注意】容器要定高；由内而外会触发窗体重定位（解决办法：focus锚点定位，只要定位元素在容器里就不会发生窗体滚动）
+【html代码 】
+```
+<div class="box">
+    <div class="list"><input id="one">1</div>
+    <div class="list"><input id="two">2</div>
+    <div class="list"><input id="three">3</div>
+    <div class="list"><input id="four">4</div></div><div class="link">
+    <label class="click" for="one">1</label>
+    <label class="click" for="two">2</label>
+    <label class="click" for="three">3</label>
+    <label class="click" for="four">4</label></div>
+```
+
+【原理】不会跳动的原因：
+每个li塞一个看不到的input框。选项卡变label元素。用for属性和input的id关联
+使用scrollTop解决 列表部分区域在浏览器外，仍会跳转的问题。
+
+```
+$('label.click').removeAttribute('for').on('click', function () {
+    $('.box').scrollTop(xxx);//滚动数值
+});
+```
+
+> 基于父容器自身的scrollTop值改变来实现自定义滚动条效果【优点】
+1. 实现简单，无须做边界判断。```container.scrollTop=99999;```，列表滚动就是scrollTop值，实时获取。
+2. 可与原生的scroll事件天然继承，无缝对接。
+3. 无须改变子元素的结构。
+
