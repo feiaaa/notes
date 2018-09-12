@@ -1117,3 +1117,88 @@ $('label.click').removeAttribute('for').on('click', function () {
 2. 可与原生的scroll事件天然继承，无缝对接。
 3. 无须改变子元素的结构。
 
+#### 6.5 float的兄弟```position:absolute```
+【复习 6.1 float 的特性】
+##### float自身特性：
+- 包裹性；（【复习】包裹性=包裹+自适应性）
+- 块状化并格式化上下文（BFC）；
+- 破坏文档流；（特性的精髓）
+- 没有任何margin合并。
+
+块状化：元素一旦float的属性值不为none，则其display计算值为block或table。
+【复习完毕】
+
+ ```position:absolute```的特性：包裹性，破坏性，块状化BFC，无依赖性，相对定位特性。
+absolute是非常独立的css属性值。样式和行为表现不依赖其他任何css属性就能完成。
+
+absolute和float写在一起，float没有任何效果，所以不要一起用
+
+absolute的块状化：元素一旦position的属性值为absolute或者fixed，则其display计算值为block或table。
+自适应性的最大宽度由“包含块”决定。
+
+**包含块：containing block **
+普通元素的百分比宽度是相对于父元素的content box宽度计算，而绝对定位元素的宽度是相对于第一个position不为static的祖先元素计算的。
+	1. 根元素html被称为“初始包含块”，其尺寸等同于浏览器可视窗口的大小。
+	2.  对于其他元素，如果该元素的position是relative或static，则“包含块”由其最近的块容器祖先盒子的content box边界组成。
+	3.  如果元素position:fixed;，则“包含块”是“初始包含块”。
+	4.  如果元素position:absolute;，则“包含块”由最近的position不为static的祖先元素建立，具体方式如下：
+如果该祖先元素是纯inline元素，则规则略复杂：
+-   给内联元素的前后各生成一个宽度为0的内联盒子，则这两个内联盒子的padding box外面的包围盒子就是内联元素的“包含块”。
+-  如果该内联元素被跨行分割，则包含块是未定义的。
+- 否则，“包含块”由该祖先的padding box边界组成。
+
+
+> 和常规元素相比，绝对定位元素的包含块有3个明显的差异：
+	1.  内联元素也可以作为包含块所在的元素；
+	2. 包含块所在的元素不是父级块元素，而是最近的position不为static的祖先元素或根元素；
+	3.  边界是padding box而不是content box。
+
+
+内联元素的“包含块”是由“生成的”前后内联盒子决定，与里面的内联盒子细节没有任何关系。
+【注意】不同浏览器下跨行兼容性问题，会导致包含块有不同的差异
+
+**无依赖性（相对定位特性 ）**：没设置left/right/top/bottom属性的绝对定位。
+
+【用途】
+【eg】[利用absolute制作左上角new角标](https://demo.cssworld.cn/6/5-4.php)
+其中，左上角，可以不写```left:0;top:0```
+
+【eg】[导航栏各类图标定位](https://demo.cssworld.cn/6/5-5.php)
+【eg】[超越常规布局的排版，用户注册页（注意提示信息）](https://demo.cssworld.cn/6/5-6.php)
+
+【eg】[下拉列表的定位](https://demo.cssworld.cn/6/5-7.php)
+【注意】虽然无依赖绝对定位好处多多，但只用在静态交互效果上较好。动态列表用js
+
+##### absolute与text-align
+absolute元素的display计算值是块状的，text-align不会起作用。
+如果起了作用，是支柱和无依赖绝对定位共同作用的结果。
+
+【eg】[text-align和absolute定位全兼容版本实例页面](https://demo.cssworld.cn/6/5-9.php)
+核心代码：
+```
+p {
+    text-align: center;
+}
+img {
+    position: absolute;
+}
+
+```
+【原理】导致图片在中间才开始显示的原因
+img是内联水平。支柱也是内联水平。所以受```text-align:center```影响，水平居中显示。
+img设置了absolute，表现为“无依赖绝对定位”，所以在 支柱后面显示。因为图片不占空间，所以支柱在水平中心显示。
+
+【eg】根据上述内容做出的水平居中定位
+[水平居中](https://codepen.io/feiaaa/pen/yxKGby)
+【应用】[text-align实现的右外侧定位效果实例页面(右下角的返回顶部)](https://demo.cssworld.cn/6/5-10.php)
+
+#### 6.6absolute与overflow
+**overflow对absolute的裁剪规则**：如果overflow不是定位元素，同时绝对定位元素和overflow容器之间也没有定位元素，则overflow无法对absolute元素进行裁剪。overflow元素父级是定位元素也不会裁剪。
+
+【个人】（裁剪要满足2个条件，1overflow，2本体或子元素有绝对定位）
+【本书】能被裁剪的场合：
+1. overflow属性所在的元素同时也是定位元素，里面的绝对定位元素会被裁剪；
+2. overflow元素和绝对定位元素之间有定位元素，也会被裁剪。
+3. overflow属性值不是hidden，而是auto或scroll，即使绝对定位元素高度比overflow元素高度大，也不会出现滚动条。
+【应用】[个人心得]博客背景锁定
+[overflow:auto与absolute滚动定位实例页面](https://demo.cssworld.cn/6/5-11.php)
