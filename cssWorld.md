@@ -1202,3 +1202,88 @@ img设置了absolute，表现为“无依赖绝对定位”，所以在 支柱�
 3. overflow属性值不是hidden，而是auto或scroll，即使绝对定位元素高度比overflow元素高度大，也不会出现滚动条。
 【应用】[个人心得]博客背景锁定
 [overflow:auto与absolute滚动定位实例页面](https://demo.cssworld.cn/6/5-11.php)
+
+#### 6.7absolute与clip
+clip属性要起作用，元素必须是绝对定位absolute或固定定位fixed。
+
+【应用】
+1. fixed固定定位的剪裁
+```
+.fixed-clip {
+    position: fixed;
+    clip: rect(30px 200px 200px 20px);
+}
+```
+2. 最佳可访问性隐藏
+最佳可访问性隐藏指的是视觉上看不见，但是辅助设备(例如盲人用的)能够进行识别和访问。
+同时SEO能识别，也能被focus
+```
+.logo h1 {
+    position: absolute;
+    clip: rect(0 0 0 0);
+}
+<a href="/" class="logo">
+    <h1>我是标题</h1>
+</a>
+```
+隐藏方面的问题详见第10章
+
+#### absolute的流体特性
+##### 当absolute遇到left/top/right/bottom属性
+当absolute遇到left/top/right/bottom属性时，absolute元素才真正变成绝对定位元素。
+（复习：没遇到的时候具有无依赖性）
+
+##### absolute的流体特性
+当一个绝对定位元素，其对立定位方向属性同时具有定位数值时，就会发生流体特性。
+普通元素流体特性只有水平方向（默认），但是绝对定位元素可以让垂直方向和水平方向同时保持流动性。
+【eg】使box完全遮盖浏览区可视窗口，并且跟着浏览器窗口大小变化。（是和窗口一样大，如果有滚条照样暴露）
+```
+.box{position:absolute;left: 0;right: 0;top: 0;bottom: 0;background:  rgba(0,0,0,0.5);}
+<div class="box"></div>
+```
+【eg】利用垂直方向上的流体特性制作高度自适应布局，高度等比例布局（垂直方向上的流体让子元素可以用百分比了）
+```
+            <style type="text/css">
+                  .box{ position: absolute;left: 0;right: 0;top:  0;bottom: 0;background: rgba(0,0,0,0.5);}
+                  .box1{height: 33.3%;box-sizing: content-box;border:  1px solid red;}
+            </style>
+            <div class="box">
+                  <div class="box1">
+                        1
+                  </div>
+                  <div class="box1">
+                        2
+                  </div>
+                  <div class="box1">
+                        3
+                  </div>
+            </div>
+```
+
+##### absolute的margin:auto
+绝对定位元素的margin规则和普通流体元素一致。但是ie8+支持。
+【应用】利用绝对定位的流体特性和margin:auto的自动分配特性实现居中。
+
+#### ```position:relative```
+对absolute的限制：只有relative可以让元素保持在正常的文档流中。
+特性：相对自身进行偏移定位，无侵入（一般情况下不会影响周围元素的布局）
+
+relative的left/top/right/bottom百分比值是相对于包含块计算的，不是自身。
+relative出现对立方向定位时，只有一个方向的定位属性能起作用，一般是左和上。
+
+##### ```position:relative```的最小化影响原则
+1. 尽量不适用relative，定位某元素，可以使用无依赖的绝对定位；
+2. 如果需要使用relative，则该relative需要最小化。
+
+#### ```position:fixed```固定定位
+ ```position:fixed```固定定位元素的包含块是根元素。
+唯一可以限制固定定位元素的是<html>根元素。relative对fixed定位没有任何限制作用。
+无依赖的固定定位；和无依赖的绝对定位类似；没设置left/right/top/bottom属性的相对定位。
+
+> 【应用】背景锁定
+为何写背景锁定？
+1蒙版层无法盖住滚条。2鼠标滚动背景依然可以滚动，影响视觉
+【法1】absolute模拟fix定位。让滚条由内部普通元素产出而非窗口
+【法2】用js，移动端项目阻止使用touchmove，pc端让根元素```overflow:hidden```
+在加上以下js代码，通过透明border属性，把滚条的位置留出来。
+[背景锁定的蒙版层](https://codepen.io/feiaaa/pen/eLLvzP)
