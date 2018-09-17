@@ -1550,6 +1550,7 @@ html:{font-family:system-ui}
 1. ```white-space```的处理模型
 声明了如何处理元素内的空白字符，包括空格键Space、回车键Enter、制表符Tab产生的空白。
 功能有3个维度，分别是：**是否合并空白字符(多个合为一个)、是否合并换行符(多行合为一行)、文本是否自动换行（文本环绕）。**
+![white-space不同属性](https://github.com/feiaaa/notes/blob/master/peitu/whitespace.png)
 （最后2项ie8+支持）
 
 2. ``white-space``与最大可用宽度
@@ -1678,6 +1679,7 @@ base64图片的渲染性能不高，大尺寸图片慎用。
 第十章：元素的显示与隐藏
 **涉及内容**：display:none;visibility:hidden。
 ####  使用CSS让元素不可见的方法，剪裁、定位到屏幕外、明度变化等。
+![让元素不可见的方法](https://github.com/feiaaa/notes/blob/master/peitu/hide.png)
 （见表）
 #### ```display```与元素的显示/隐藏
  ```display:none``` 该元素和所有后代元素都隐藏，如果其他计算值则显示。
@@ -1686,6 +1688,7 @@ base64图片的渲染性能不高，大尺寸图片慎用。
 对于计数器，使用了 ```display:none```，则该计数不算到总值里去。
 
 #### ```visibility```与元素的显示/隐藏
+![让元素不可见的方法](https://github.com/feiaaa/notes/blob/master/peitu/hide.png)
 （见表）
 【eg】[visibility后代可见](https://demo.cssworld.cn/10/2-1.php)
 [display和visibility的计数器页面](https://demo.cssworld.cn/10/2-2.php)
