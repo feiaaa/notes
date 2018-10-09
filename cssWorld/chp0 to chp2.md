@@ -10,7 +10,9 @@
 - [在线阅读](https://whjin.github.io/full-stack-development/posts/CSS%E4%B8%96%E7%95%8C/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.html)
 
 ### 目录列表（点击可快速跳转）
-
+0. [全章节笔记（超长！）](https://github.com/feiaaa/notes/blob/master/cssWorld/cssWorldAll.md)
+1. [第一章节:流,第二章节:术语](https://github.com/feiaaa/notes/blob/master/cssWorld/chp0%20to%20chp2.md)
+2. [第三章节:流，元素与基本尺寸](https://github.com/feiaaa/notes/blob/master/cssWorld/chp3.md)
 
 ### 备注
 - 本书只讨论css2，css3在另一本书里面
