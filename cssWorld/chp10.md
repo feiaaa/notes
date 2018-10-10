@@ -20,7 +20,7 @@
 [display和visibility的计数器页面](https://demo.cssworld.cn/10/2-2.php)
 [visibility与内容hover的延时显示实例页面](https://demo.cssworld.cn/10/2-3.php)
 
-###第十一章：用户界面样式
+### 第十一章：用户界面样式
 **涉及内容**：outline,cursor。
 #### ```outline```
 outline表示元素的轮廓，语法和border属性类似，分宽度、类型、颜色，支持的关键字和属性值和border属性一模一样。
@@ -59,11 +59,13 @@ direction:ltr //默认值，left to right
 
 #### 改变纵横规则的```writing-mode```
 将页面的默认水平流改成了垂直流。
+
 【应用】古诗词（本来的用途是这个）
 [代码](https://codepen.io/feiaaa/pen/yxRLKM)
 【应用】文字的点击下沉效果
 缺点：只能用在一个字上，否则会穿帮
 [CSS writing-mode与text-indent文字下沉实例页面](https://demo.cssworld.cn/12/2-5.php)
+
 【应用】做成打开下拉菜单导致图标旋转的效果
 [图标旋转](https://demo.cssworld.cn/12/2-6.php)
 
