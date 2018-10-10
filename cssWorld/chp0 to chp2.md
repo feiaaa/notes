@@ -11,8 +11,15 @@
 
 ### 目录列表（点击可快速跳转）
 0. [全章节笔记（超长！）](https://github.com/feiaaa/notes/blob/master/cssWorld/cssWorldAll.md)
-1. [第一章节:流,第二章节:术语](https://github.com/feiaaa/notes/blob/master/cssWorld/chp0%20to%20chp2.md)
-2. [第三章节:流，元素与基本尺寸](https://github.com/feiaaa/notes/blob/master/cssWorld/chp3.md)
+1. [第1章:流,第2章:术语](https://github.com/feiaaa/notes/blob/master/cssWorld/chp0%20to%20chp2.md)
+2. [第3章　流、元素与基本尺寸](https://github.com/feiaaa/notes/blob/master/cssWorld/chp3.md)
+3. [第4章　盒尺寸四大家族](https://github.com/feiaaa/notes/blob/master/cssWorld/chp4.md)
+4. [第5章　内联元素与流](https://github.com/feiaaa/notes/blob/master/cssWorld/chp5.md)
+5. [第6章　流的破坏与保护 ](https://github.com/feiaaa/notes/blob/master/cssWorld/chp6.md)
+6. [第7章　CSS世界的层叠规则](https://github.com/feiaaa/notes/blob/master/cssWorld/chp7.md)
+7. [第8章　强大的文本处理能力 ](https://github.com/feiaaa/notes/blob/master/cssWorld/chp8.md)
+8. [第9章　元素的装饰与美化](https://github.com/feiaaa/notes/blob/master/cssWorld/chp9.md)
+9. [第10章　元素的显示与隐藏,第 11章　用户界面样式,第 12章　流向的改变](https://github.com/feiaaa/notes/blob/master/cssWorld/chp10.md)
 
 ### 备注
 - 本书只讨论css2，css3在另一本书里面

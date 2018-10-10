@@ -147,7 +147,7 @@ max-width：防止图片过大，在移动端影响体验。如果原始图片�
 > - max-width会盖掉width，哪怕width用了style和!important；
 > - min-width要是大过了max-width,以min-width为准，max-width的值被忽略
 
-####【应用】max-width：展开收起的动画技术
+#### 【应用】max-width：展开收起的动画技术
 - 【法0】display:block和none之间切换
 - 【法1】jquery的slideUp()和slideDown()
 - 【法2】max-height:0到max-height:值的变化。（值大于展开内容高度即可，如果值太大，会造成‘效果延迟’的视觉效果）

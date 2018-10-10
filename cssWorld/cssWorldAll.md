@@ -211,7 +211,7 @@ max-width：防止图片过大，在移动端影响体验。如果原始图片�
 > - max-width会盖掉width，哪怕width用了style和!important；
 > - min-width要是大过了max-width,以min-width为准，max-width的值被忽略
 
-####【应用】max-width：展开收起的动画技术
+#### 【应用】max-width：展开收起的动画技术
 - 【法0】display:block和none之间切换
 - 【法1】jquery的slideUp()和slideDown()
 - 【法2】max-height:0到max-height:值的变化。（值大于展开内容高度即可，如果值太大，会造成‘效果延迟’的视觉效果）
@@ -677,7 +677,7 @@ img{top:30%,margin-right:10px} //margin-right写了，right没写，无效
 等高布局的优劣对比见4.3.1
 最多实现2-3栏，等比例的最多7栏。父容器不能用```overflow:hidden```
 
-【个人】综合练习
+
 
 ### 第五章：内联元素与流
 **涉及内容**：baseline，line-height，vertical-align，支柱（strut）
@@ -1676,7 +1676,7 @@ base64图片的渲染性能不高，大尺寸图片慎用。
 ##### ```background-color```背景色永远是最低的
 无论background单背景还是多背景，背景色是在最底下的位置。
 
-第十章：元素的显示与隐藏
+### 第十章：元素的显示与隐藏
 **涉及内容**：display:none;visibility:hidden。
 ####  使用CSS让元素不可见的方法，剪裁、定位到屏幕外、明度变化等。
 ![让元素不可见的方法](https://github.com/feiaaa/notes/blob/master/peitu/hide.png)
@@ -1713,7 +1713,7 @@ outline表示元素的轮廓，语法和border属性类似，分宽度、类型�
 【eg】透明光标：例如看视频的时候不想被打扰
 【eg】相册的向左向右光标：方便切换
 
-###第十二章：流向的改变
+### 第十二章：流向的改变
 **涉及内容**：```direction```，```writing-mode```
 
 #### 改变水平流向的```direction```
